@@ -9,6 +9,28 @@ struct AnimData
     float runningTime;
 };
 
+bool isOnGround(AnimData data, int windowHeight)
+{
+    return data.pos.y >= windowHeight - data.rec.height;
+}
+
+AnimData updateAnimData(AnimData data, float deltaTime, int maxFrame)
+{
+    // Update Running Time
+    data.runningTime += deltaTime;
+    if(data.runningTime >= data.updateTime)
+    {
+        data.runningTime = 0.0;
+        // update animation frame
+        data.rec.x = data.frame * data.rec.width;
+        data.frame++;
+        if(data.frame > maxFrame)
+        {
+            data.frame = 0;
+        }
+    }
+    return data;
+}
 
 int main()
 {
@@ -85,7 +107,7 @@ SetTargetFPS(60);
         ClearBackground(WHITE);
 
         //Ground Check
-        if(scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.height)
+        if(isOnGround(scarfyData, windowDimensions[1]))
         {
             // Sprite is on the ground
             velocity = 0;
@@ -111,36 +133,16 @@ SetTargetFPS(60);
         // Update Scarfy Position
         scarfyData.pos.y += velocity * dT;
 
+        if(!isInAir)
+        {
+          scarfyData = updateAnimData(scarfyData, dT, 5);  
+        }
+
         for(int i = 0; i < sizeOfNebulae; i++)
         {
-                nebulae[i].runningTime += dT;
-            if(nebulae[i].runningTime >= nebulae[i].updateTime)
-            {
-                nebulae[i].runningTime = 0.0;
-                    //Update Animation
-                nebulae[i].rec.x = nebulae[i].frame * nebulae[i].rec.width;
-                nebulae[i].frame++;
-                if(nebulae[i].frame > 7)
-                {
-                    nebulae[i].frame = 0;
-                }
-            }
+            nebulae[i] = updateAnimData(nebulae[i], dT, 7);
         }
 
-
-        //Update Scarfy Animation Frame
-        scarfyData.runningTime += dT;
-        if(scarfyData.runningTime >= scarfyData.updateTime && !isInAir)
-        {
-            scarfyData.runningTime = 0.0;
-                //Update Animation
-            scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-            scarfyData.frame++;
-            if(scarfyData.frame > 5)
-            {
-                scarfyData.frame = 0;
-            }
-        }
 
         for (int i = 0; i < sizeOfNebulae; i ++)
         {
