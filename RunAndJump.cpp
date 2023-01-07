@@ -44,7 +44,15 @@ AnimData neb2Data{
     0.0
 };
 
-AnimData nebulae[2]{nebData, neb2Data};
+AnimData nebulae[2]{};
+
+for (int i = 0; i < 2; i++)
+{
+    nebulae[i].rec.x = 0.0;
+    nebulae[i].rec.y = 0.0;
+    nebulae[i].rec.width = nebula.width/8;
+    nebulae[i].rec.height = nebula.height/8;
+}
 
 
     //nebula X velocity (pixels/second)
@@ -105,35 +113,35 @@ SetTargetFPS(60);
         }
 
         //Update Nebula Position
-        nebData.pos.x += nebVel * dT;
-        neb2Data.pos.x += nebVel * dT;
+        nebulae[0].pos.x += nebVel * dT;
+        nebulae[1].pos.x += nebVel * dT;
 
         // Update Scarfy Position
         scarfyData.pos.y += velocity * dT;
 
         //Update Nebula Animation Frame
-        nebData.runningTime += dT;
-        if(nebData.runningTime >= nebData.updateTime)
+        nebulae[0].runningTime += dT;
+        if(nebulae[0].runningTime >= nebulae[0].updateTime)
         {
-            nebData.runningTime = 0.0;
+            nebulae[0].runningTime = 0.0;
                 //Update Animation
-            nebData.rec.x = nebData.frame * nebData.rec.width;
-            nebData.frame++;
-            if(nebData.frame > 7)
+            nebulae[0].rec.x = nebulae[0].frame * nebulae[0].rec.width;
+            nebulae[0].frame++;
+            if(nebulae[0].frame > 7)
             {
-                nebData.frame = 0;
+                nebulae[0].frame = 0;
             }
         }
-        neb2Data.runningTime += dT;
-        if(neb2Data.runningTime >= neb2Data.updateTime)
+        nebulae[1].runningTime += dT;
+        if(nebulae[1].runningTime >= nebulae[1].updateTime)
         {
-            neb2Data.runningTime = 0.0;
+            nebulae[1].runningTime = 0.0;
                 //Update Animation
-            neb2Data.rec.x = neb2Data.frame * neb2Data.rec.width;
-            neb2Data.frame++;
-            if(neb2Data.frame > 7)
+            nebulae[1].rec.x = nebulae[1].frame * nebulae[1].rec.width;
+            nebulae[1].frame++;
+            if(nebulae[1].frame > 7)
             {
-                neb2Data.frame = 0;
+                nebulae[1].frame = 0;
             }
         }
 
@@ -152,8 +160,8 @@ SetTargetFPS(60);
         }
 
         //Draw Nebula
-        DrawTextureRec(nebula, nebData.rec, nebData.pos, WHITE);
-        DrawTextureRec(nebula, neb2Data.rec, neb2Data.pos, BLUE);
+        DrawTextureRec(nebula, nebulae[0].rec, nebulae[0].pos, WHITE);
+        DrawTextureRec(nebula, nebulae[1].rec, nebulae[1].pos, BLUE);
 
         //Draw Scarfy
         DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE);
